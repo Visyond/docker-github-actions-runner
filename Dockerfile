@@ -7,6 +7,7 @@ RUN apt-get update \
   && tar xzf ./actions-runner-linux-x64-2.165.2.tar.gz \
   && /actions-runner/bin/installdependencies.sh
 
-COPY run.sh /run.sh
+COPY run.sh /entrypoint
+RUN chmod +x /entrypoint
 
-ENTRYPOINT ["/run.sh"]
+ENTRYPOINT [ "/entrypoint" ]
