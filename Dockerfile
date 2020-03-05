@@ -10,4 +10,4 @@ RUN apt-get update \
 COPY run.sh /entrypoint
 RUN chmod +x /entrypoint
 
-ENTRYPOINT [ "/entrypoint" ]
+CMD [ "/entrypoint" ]
