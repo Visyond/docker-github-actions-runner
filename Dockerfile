@@ -1,5 +1,6 @@
-FROM ubuntu:rolling
-LABEL maintainer="3vilpenguin@gmail.com"
+# FROM ubuntu:rolling
+FROM debian:stretch
+LABEL maintainer="trousev@visyond.com"
 
 ARG GIT_VERSION="2.23.0"
 ARG GH_RUNNER_VERSION="2.165.2"
@@ -8,7 +9,7 @@ ARG TARGETPLATFORM
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3003
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
     curl \
     tar \
     apt-transport-https \
@@ -22,7 +23,8 @@ RUN apt-get update && \
     liblttng-ust0 \
     libcurl4-openssl-dev \
     inetutils-ping \
-    jq \
+    jq \ 
+    gnupg \
   && rm -rf /var/lib/apt/lists/* \
   && c_rehash \
   && cd /tmp \
@@ -35,8 +37,8 @@ RUN apt-get update && \
   && cd / \
   && rm -rf /tmp/git.tgz /tmp/git-${GIT_VERSION}
 
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
-  && [[ $(lsb_release -cs) == "eoan" ]] && ( add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu disco stable" ) || ( add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" )\
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+  && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"\
   && apt-get update \
   && apt-get install -y docker-ce docker-ce-cli containerd.io --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
